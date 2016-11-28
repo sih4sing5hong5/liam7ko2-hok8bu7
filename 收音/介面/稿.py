@@ -25,13 +25,14 @@ class 稿(View):
             啥人唸的=啥人唸的,
             例句=例句表.objects.get(pk=編號),
         )
-        資料陣列=bytes(json.loads('['+b64decode(request.POST['blob']).decode('utf-8')+']'))
+        資料陣列 = bytes(json.loads(
+            '[' + b64decode(request.POST['blob']).decode('utf-8') + ']'
+        ))
         例句音檔.音檔.save(
             '錄音檔-{}-{}.wav'.format(啥人唸的, 編號),
             ContentFile(資料陣列)
         )
-        print(資料陣列[:200])
-        
+
         return self.揣後一筆(request.POST['啥人唸的'])
 
     def 揣後一筆(self, 啥人唸的):
