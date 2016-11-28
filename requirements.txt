@@ -1,0 +1,4 @@
+django
+django-herokuapp
+dj-database-url
+django-sslify
