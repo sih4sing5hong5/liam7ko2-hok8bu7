@@ -2,3 +2,5 @@ django
 django-herokuapp
 dj-database-url
 django-sslify
+django-cors-headers
+tai5-uan5-gian5-gi2-kang1-ku7
