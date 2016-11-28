@@ -9,15 +9,17 @@ from 收音.models import 例句表
 class 稿(View):
 
     def get(self, request):
-        數量 = 例句音檔表.objects.filter(啥人唸的=request.GET['啥人唸的']).count()
-        例句 = 例句表.objects.get(pk=數量 + 1)
-        return JsonResponse(model_to_dict(例句))
+        return self.揣後一筆(request.GET['啥人唸的'])
 
     def post(self, request):
-        物件 = 書面表.objects.get(pk=pk)
-        物件.資料.create(
-            啥人改的=request.user,
+        例句音檔表.objects.create(
+            啥人改的=request.POST['啥人唸的'],
+            例句=例句表.objects.get(pk=request.POST['id']),
+            音檔=request.POST['blob'],
         )
-        return JsonResponse({
-            '狀態': '無問題'
-        })
+        return self.揣後一筆(request.POST['啥人唸的'])
+
+    def 揣後一筆(self, 啥人唸的):
+        數量 = 例句音檔表.objects.filter(啥人唸的=啥人唸的).count()
+        例句 = 例句表.objects.get(pk=數量 + 1)
+        return JsonResponse(model_to_dict(例句))
