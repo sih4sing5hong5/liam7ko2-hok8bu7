@@ -1,4 +1,5 @@
 
+from django.core.files.base import ContentFile
 from django.db.models.aggregates import Max
 from django.forms.models import model_to_dict
 from django.http.response import JsonResponse
@@ -13,17 +14,28 @@ class 稿(View):
         return self.揣後一筆(request.GET['啥人唸的'])
 
     def post(self, request):
-        例句音檔表.objects.create(
-            啥人改的=request.POST['啥人唸的'],
-            例句=例句表.objects.get(pk=request.POST['id']),
-            音檔=request.POST['blob'],
+        啥人唸的 = request.POST['啥人唸的']
+        編號 = request.POST['編號']
+        例句音檔 = 例句音檔表.objects.create(
+            啥人唸的=啥人唸的,
+            例句=例句表.objects.get(pk=編號),
+        )
+        例句音檔.音檔.save(
+            '錄音檔-{}-{}.wav'.format(啥人唸的, 編號),
+            ContentFile(request.POST['blob'])
         )
         return self.揣後一筆(request.POST['啥人唸的'])
 
     def 揣後一筆(self, 啥人唸的):
-        數量 = 例句音檔表.objects.filter(啥人唸的=啥人唸的).aggregate(上尾一句=Max('pk'))['上尾一句']
+        數量 = (
+            例句音檔表.objects
+            .filter(啥人唸的=啥人唸的)
+            .aggregate(上尾一句=Max('例句__pk'))['上尾一句']
+        )
         try:
             例句 = 例句表.objects.get(pk=數量 + 1)
         except:
             例句 = 例句表.objects.get(pk=1)
-        return JsonResponse(model_to_dict(例句))
+        資料 = model_to_dict(例句)
+        資料['編號'] = 資料['id']
+        return JsonResponse(資料)
