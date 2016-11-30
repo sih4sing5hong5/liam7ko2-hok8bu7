@@ -3,6 +3,7 @@ from base64 import b64decode
 import json
 
 from django.core.files.base import ContentFile
+from django.db import transaction
 from django.db.models.aggregates import Max
 from django.forms.models import model_to_dict
 from django.http.response import JsonResponse
@@ -21,17 +22,18 @@ class 稿(View):
     def post(self, request):
         啥人唸的 = request.POST['啥人唸的']
         編號 = request.POST['編號']
-        例句音檔 = 例句音檔表.objects.create(
-            啥人唸的=啥人唸的,
-            例句=例句表.objects.get(pk=編號),
-        )
         資料陣列 = bytes(json.loads(
             '[' + b64decode(request.POST['blob']).decode('utf-8') + ']'
         ))
-        例句音檔.音檔.save(
-            '錄音檔-{}-{}.wav'.format(啥人唸的, 編號),
-            ContentFile(資料陣列)
-        )
+        with transaction.atomic():
+            例句音檔 = 例句音檔表.objects.create(
+                啥人唸的=啥人唸的,
+                例句=例句表.objects.get(pk=編號),
+            )
+            例句音檔.音檔.save(
+                '錄音檔-{}-{}.wav'.format(啥人唸的, 編號),
+                ContentFile(資料陣列)
+            )
 
         return self.揣後一筆(request.POST['啥人唸的'])
 
