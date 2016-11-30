@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     '收音',
     'corsheaders',
+    'herokuapp',
 ]
 
 MIDDLEWARE = [
