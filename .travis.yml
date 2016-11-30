@@ -7,32 +7,38 @@ env:
 addons:
   apt:
     sources:
-      - ubuntu-toolchain-r-test
+    - ubuntu-toolchain-r-test
     packages:
-      - gcc-4.9
-      - g++-4.9
-      - python3-dev
-      - libc6-dev-i386
-      - linux-libc-dev
-      - gcc-multilib
-      - libx11-dev
-      - libx11-dev:i386
-      - git
-      - subversion
-      - automake
-      - libtool
-      - zlib1g-dev
-      - libbz2-dev
-      - liblzma-dev
-      - libboost-all-dev
-      - libgoogle-perftools-dev
-      - libxmlrpc-c++.*-dev
-      - cmake
-      - csh
-      - libX11-dev
+    - gcc-4.9
+    - g++-4.9
+    - python3-dev
+    - libc6-dev-i386
+    - linux-libc-dev
+    - gcc-multilib
+    - libx11-dev
+    - libx11-dev:i386
+    - git
+    - subversion
+    - automake
+    - libtool
+    - zlib1g-dev
+    - libbz2-dev
+    - liblzma-dev
+    - libboost-all-dev
+    - libgoogle-perftools-dev
+    - libxmlrpc-c++.*-dev
+    - cmake
+    - csh
+    - libX11-dev
 branches:
   only:
   - master
 script:
 - pip install -r requirements.txt
-
+deploy:
+  provider: heroku
+  api_key:
+    secure: LIFdG2R4I6phVErmOwar0+RMa/S63Zw7Y+S7gQTF71TLT60yfgJIUci7mwjyFE9YcRiw7/wH51t+c0qML2mO7tVVoBa7A491kuSX22WGtYZzLD3jMo75R2QSJ9dH2uNx3p832uiKfr7LZIROWpG9V5OY+aHohSJbs8n5X0gFTPGieBa6Eh/IFIkDXF8+7odFr9Hnss/9XR2WP4gQkiohbO9w2Uf2G7ai1Ruy3f8AHKCvxF7FxsNqHBd2VDBVfitZ+E+yTIGhkIbRoQQ4R3CMWM6H+RzaMzkkF+aPm/5XEla5wN8f5T+UHP69FYDQ6hfSJvuBKtNKpcoygMCRpyh/O2+l2gZ6mj++btdyOZRly0XnWzh45THqrYN0lY2lZ1O3rfdqrLnmxJq7+pSRq4GAKMvSnmXBXqma7Bb49jdtesNwUqHVDSBZcVkf8LCgrI0ixLaqmtyG+RN2x2OLxRJ7Qewz4OewKvFw2BdVxhkrPmAjgOK+2HuUzOq3akmMM9ZexZV5anr8GGjHaQw9a162Qa8dsN4BGaw8CEhp+S5De0tD7JmTGJlVRAL4hnuhgoyYB2jCtFRC5mJonyl7pw0Z9VeOFE6TpU1LcJL/EbNARY7VVZlczHfjF4CAO8vYISupxKC7fzrUYftF7p9jnDgFgNKwj2IASWrIWt1QJOdwTs4=
+  app: lok8im1
+  on:
+    repo: sih4sing5hong5/liam7ho2-hok8bu7
