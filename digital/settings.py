@@ -178,6 +178,7 @@ AWS_REDUCED_REDUNDANCY = False
 AWS_IS_GZIPPED = False
 
 try:
+    from digital.local import DEBUG, SECRET_KEY
     from digital.local import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_STORAGE_BUCKET_NAME
 except:
     AWS_ACCESS_KEY_ID = ''
