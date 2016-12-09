@@ -17,10 +17,10 @@ from 收音.models import 例句表
 class 稿(View):
 
     def get(self, request):
-        return self.揣後一筆(request.GET['啥人唸的'])
+        return self.揣後一筆(request.GET['啥人唸的'].strip())
 
     def post(self, request):
-        啥人唸的 = request.POST['啥人唸的']
+        啥人唸的 = request.POST['啥人唸的'].strip()
         編號 = request.POST['編號']
         資料陣列 = bytes(json.loads(
             '[' + b64decode(request.POST['blob']).decode('utf-8') + ']'
@@ -35,7 +35,7 @@ class 稿(View):
                 ContentFile(資料陣列)
             )
 
-        return self.揣後一筆(request.POST['啥人唸的'])
+        return self.揣後一筆(啥人唸的)
 
     def 揣後一筆(self, 啥人唸的):
         數量 = (
