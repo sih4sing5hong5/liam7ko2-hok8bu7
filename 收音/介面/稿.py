@@ -17,7 +17,18 @@ from 收音.models import 例句表
 class 稿(View):
 
     def get(self, request):
-        return self.揣後一筆(request.GET['啥人唸的'].strip())
+        try:
+            這馬第幾句 = int(request.GET['這馬第幾句'])
+        except:
+            return self.揣後一筆(request.GET['啥人唸的'].strip())
+
+        try:
+            例句 = 例句表.objects.get(pk=這馬第幾句 + 1)
+        except:
+            例句 = 例句表.objects.get(pk=1)
+        資料 = model_to_dict(例句)
+        資料['編號'] = 資料['id']
+        return JsonResponse(資料)
 
     def post(self, request):
         啥人唸的 = request.POST['啥人唸的'].strip()
