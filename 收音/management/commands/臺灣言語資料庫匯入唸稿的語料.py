@@ -33,40 +33,42 @@ class Command(BaseCommand):
         }
         切 = re.compile(r'錄音檔-(.+)-(\d+).wav\Z')
         資料夾 = join(settings.BASE_DIR, '原始檔案')
-        for 檔名 in sorted(listdir(資料夾), key=lambda 名: 名.split('-')[2]):
+        全部檔名 = []
+        for 檔名 in sorted(listdir(資料夾)):
             結果 = 切.match(檔名)
             if 結果:
-                編號 = int(結果.group(2))
-                例句 = 例句表.objects.get(pk=編號)
-                conn = http.client.HTTPConnection(
-                    "xn--lhrz38b.xn--v0qr21b.xn--kpry57d")
-                conn.request(
-                    "GET",
-                    "/%E6%BC%A2%E5%AD%97%E9%9F%B3%E6%A8%99%E5%B0%8D%E9%BD%8A" +
-                    "?%E6%9F%A5%E8%A9%A2%E8%85%94%E5%8F%A3=%E9%96%A9%E5%8D%97%E8%AA%9E" +
-                    "&%E6%BC%A2%E5%AD%97=" + quote(例句.漢字) +
-                    "&%E9%9F%B3%E6%A8%99=" + quote(例句.臺羅)
-                )
-                r1 = conn.getresponse()
-                if r1.status != 200:
-                    print(r1.status, r1.reason)
-                    raise RuntimeError()
-                資料 = json.loads(r1.read().decode('utf-8'))
+                全部檔名.append((結果.group(1), int(結果.group(2)), 檔名))
+        for 語者, 編號, 檔名 in sorted(全部檔名):
+            例句 = 例句表.objects.get(pk=編號)
+            conn = http.client.HTTPConnection(
+                "xn--lhrz38b.xn--v0qr21b.xn--kpry57d")
+            conn.request(
+                "GET",
+                "/%E6%BC%A2%E5%AD%97%E9%9F%B3%E6%A8%99%E5%B0%8D%E9%BD%8A" +
+                "?%E6%9F%A5%E8%A9%A2%E8%85%94%E5%8F%A3=%E9%96%A9%E5%8D%97%E8%AA%9E" +
+                "&%E6%BC%A2%E5%AD%97=" + quote(例句.漢字) +
+                "&%E9%9F%B3%E6%A8%99=" + quote(例句.臺羅)
+            )
+            r1 = conn.getresponse()
+            if r1.status != 200:
+                print(r1.status, r1.reason)
+                raise RuntimeError()
+            資料 = json.loads(r1.read().decode('utf-8'))
 
-                音檔路徑 = join(資料夾, 檔名)
-                音 = 聲音檔.對檔案讀(音檔路徑)
-                json資料 = [{
-                    '內容': 資料['分詞'],
-                    '語者': 結果.group(1),
-                    '開始時間': 0.3,
-                    '結束時間': 音.時間長度()
-                }]
-                影音內容 = {'影音所在': 音檔路徑}
-                影音內容.update(公家內容)
-                影音 = 影音表.加資料(影音內容)
+            音檔路徑 = join(資料夾, 檔名)
+            音 = 聲音檔.對檔案讀(音檔路徑)
+            json資料 = [{
+                '內容': 資料['分詞'],
+                '語者': 語者,
+                '開始時間': 0.3,
+                '結束時間': 音.時間長度()
+            }]
+            影音內容 = {'影音所在': 音檔路徑}
+            影音內容.update(公家內容)
+            影音 = 影音表.加資料(影音內容)
 
-                聽拍內容 = {'聽拍資料': json資料}
-                聽拍內容.update(公家內容)
-                影音.寫聽拍(聽拍內容)
+            聽拍內容 = {'聽拍資料': json資料}
+            聽拍內容.update(公家內容)
+            影音.寫聽拍(聽拍內容)
 
         call_command('顯示資料數量')
