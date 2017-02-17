@@ -33,7 +33,7 @@ class Command(BaseCommand):
         }
         切 = re.compile(r'錄音檔-(.+)-(\d+).wav\Z')
         資料夾 = join(settings.BASE_DIR, '原始檔案')
-        for 檔名 in sorted(listdir(資料夾)):
+        for 檔名 in sorted(listdir(資料夾), key=lambda 名: 名.split('-')[2]):
             結果 = 切.match(檔名)
             if 結果:
                 編號 = int(結果.group(2))
