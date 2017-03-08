@@ -15,4 +15,4 @@ class Command(BaseCommand):
                 全部[啥人唸的] += 1
             except:
                 全部[啥人唸的] = 1
-        print(json.dumps(全部, indent=2, ensure_ascii=False))
+        print(json.dumps(全部, indent=2, ensure_ascii=False, sort_keys=True))
